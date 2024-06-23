@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.urls import reverse
 
 from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from products.models import Basket
 # Create your views here.
 
 def login(request):
@@ -46,11 +47,17 @@ def profile(request):
             print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
+
+    baskets = Basket.objects.filter(user=request.user)
     context = {
         'form': form,
+        'baskets': baskets,
+
     }
+
     return render(request, 'users/profile.html', context)
 
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('index'))
+
