@@ -40,6 +40,19 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserProfileForm(UserChangeForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4',}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4'
+    }))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4'
+    }))
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+        'class': 'form-control py-4'
+    }))
+    image = forms.ImageField(widget=forms.FileInput(attrs={
+        'class': 'custom-file-input'
+    }))
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('username', 'image', 'email', 'first_name', 'last_name')
