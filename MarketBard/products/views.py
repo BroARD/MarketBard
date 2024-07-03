@@ -3,11 +3,15 @@ from products.models import Products, ProductCategory
 
 from django.core.paginator import Paginator
 from products.models import Basket
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+from django.views.generic.base import TemplateView
 
-def index(request):
-    return render(request, 'products/index.html')
+
+class IndexView(TemplateView):
+    template_name = 'products/index.html'
+
+
 
 def products(request, category_id=None, page=1):
     products = Products.objects.filter(category_id=category_id) if category_id else Products.objects.all()
@@ -23,6 +27,7 @@ def products(request, category_id=None, page=1):
     }
     return render(request, 'products/products.html', context)
 
+@login_required
 def basket_add(request, product_id):
     product = Products.objects.get(id=product_id)
     baskets = Basket.objects.filter(user=request.user, product=product)
