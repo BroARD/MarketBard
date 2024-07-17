@@ -6,26 +6,27 @@ from products.models import Basket
 from django.contrib.auth.decorators import login_required
 
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
 
 
 class IndexView(TemplateView):
     template_name = 'products/index.html'
 
 
+class ProductsListView(ListView):
+    model = Products
+    template_name = 'products/products.html'
+    paginate_by = 3
 
-def products(request, category_id=None, page=1):
-    products = Products.objects.filter(category_id=category_id) if category_id else Products.objects.all()
+    def get_queryset(self):
+        queryset = super(ProductsListView, self).get_queryset()
+        category_id = self.kwargs.get('category_id')
+        return queryset.filter(category_id=category_id) if category_id else queryset
 
-    per_page = 3
-    paginator = Paginator(products, per_page=per_page)
-    products_paginator = paginator.page(page)
-
-    context = {
-        'products': products_paginator,
-        'category': ProductCategory.objects.all(),
-        'category_id': category_id,
-    }
-    return render(request, 'products/products.html', context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductsListView, self).get_context_data()
+        context['category'] = ProductCategory.objects.all()
+        return context
 
 @login_required
 def basket_add(request, product_id):

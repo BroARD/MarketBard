@@ -47,9 +47,9 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
-                            <a class="dropdown-item" href="{% url 'users:profile' %}">Профиль</a>
+                            <a class="dropdown-item" href="{% url 'users:profile' user.id %}">Профиль</a>
                         </li>
-                        <li><a class="dropdown-item" href="orders/orders.html">Заказы</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orders:index' %}">Заказы</a></li>
                         {% if user.is_superuser or user.is_stuff %}
                         <li><a class="dropdown-item" href="/admin">Админ-панель</a></li>
                         {% endif %}
@@ -57,9 +57,10 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{% url 'users:logout' %}">
-                                Выйти
-                            </a>
+                            <form method="post" action="{% url 'users:logout' %}">
+                                {% csrf_token %}
+                                <button class="dropdown-item" type="submit">Выйти</button>
+                            </form>
                         </li>
                     </ul>
                 </li>
